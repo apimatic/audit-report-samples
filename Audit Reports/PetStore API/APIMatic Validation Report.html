@@ -1,0 +1,4131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>APIMatic Validation Report</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/dark.min.css" />
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.3em;
+            line-height: 1.7;
+        }
+
+        code {
+            word-wrap: break-word;
+            background-color: black;
+            font-size: 110%;
+        }
+
+        ol {
+            margin-bottom: 0;
+        }
+
+        .table-of-contents-list {
+            background-color: #161F27;
+            padding: 2% 6% 2% 6%;
+        }
+
+        li:not(:first-child) {
+            margin-top: 1.5%;
+        }
+
+        li:not(:last-child) {
+            margin-bottom: 1.5%;
+        }
+
+        li.source-info {
+            padding: 1% 2% 0% 2%;
+            background-color: #161F27;
+            border-bottom: 10px solid #161F27;
+        }
+
+        li.source-info:not(:last-child) {
+            margin-bottom: 5%;
+        }
+
+        li.source-caller-info {
+            background-color: #202b38;
+            padding: 1%;
+        }
+
+        li.source-caller-info:last-child {
+            padding: 1% 1% 0% 1%;
+        }
+
+        .issue {
+            font-weight: 800;
+        }
+
+        .smaller-font {
+            font-size: 85%;
+        }
+
+        .issue-error {
+            color: #ff6b6b;
+        }
+
+        .issue-warning {
+            color: #f39c12;
+        }
+
+        .issue-info {
+            color: #6cb8eb;
+        }
+
+        .validation-failed {
+            color: #ff6b6b;
+        }
+
+        .validation-warnings {
+            color: #f39c12;
+        }
+
+        .validation-success {
+            color: #2ecc71;
+        }
+
+        @media print {
+
+            .page-break-before {
+                page-break-before: always;
+            }
+
+        }
+
+        .section-cover {
+            height: 1234px;
+            position: relative;
+            margin-top: 5%;
+            background-color: #161F27;
+        }
+
+        .section-title {
+            position: absolute;
+            bottom: 5%;
+            font-size: 1.6em;
+            text-align: center;
+            width: 100%;
+            color: white;
+            font-family: Calibri, sans-serif;
+            font-weight: 900;
+        }
+
+        .heading-severity {
+            padding: 3px 8px;
+            color: #202b38;
+            border-radius: 4px;
+            text-decoration: none;
+            font-family: monospace;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .heading-blocking {
+            background-color: #ff0002;
+        }
+
+        .heading-error {
+            background-color: #ff6b6b;
+        }
+
+        .heading-warn {
+            background-color: #feca57;
+        }
+
+        .heading-info {
+            background-color: #74b9ff;
+        }
+
+        .collapsible-text {
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.8em;
+            float: right;
+        }
+
+        .collapsible-content {
+            display: none;
+        }
+
+        .collapsible-content.show {
+            display: block;
+        }
+
+        @media screen {
+
+            h2, h3 {
+                padding: 1% 0% 1% 0%;
+            }
+
+        }
+
+        .terrible {
+            background-color: #ff6b6b;
+        }
+
+        .bad {
+            background-color: #ff6b6b;
+        }
+
+        .good {
+            background-color: #feca57;
+        }
+
+        .great, .perfect {
+            background-color: #1abc9c;
+        }
+
+        #dashboard {
+            background-color: #202b38;
+            font-size: 0.9em;
+            line-height: 1.5em;
+            height: 1250px;
+        }
+
+        #row1 {
+            height: 377px;
+            padding-top: 0.5%;
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+            padding: 10px;
+            background-color: #161f27;
+            margin: 2%;
+            height: 330px;
+            border-radius: 10px;
+            float: left;
+        }
+
+        #score-gauge-container {
+            float: left;
+            width: 45%;
+        }
+
+        #score-container {
+            height: 25%;
+        }
+
+        #gauge-score-title {
+            position: relative;
+            top: 7%;
+        }
+
+        #gauge-score {
+            font-size: 2.9em;
+            position: relative;
+            top: 22%;
+        }
+
+        #gauge-container {
+            height: 58%;
+            position: relative;
+            left: 8%;
+            width: 83%;
+        }
+
+        #gauge-labels {
+            position: relative;
+            top: 52%;
+        }
+
+        #gauge-0, #gauge-25, #gauge-50, #gauge-75, #gauge-100 {
+            position: absolute;
+            left: 50%;
+            text-align: left;
+        }
+
+        #gauge-0 {
+            -webkit-transform: translate(-1100%, 135%);
+        }
+
+        #gauge-25 {
+            -webkit-transform: translate(-495%, -140%);
+        }
+
+        #gauge-50 {
+            -webkit-transform: translate(-50%, -290%);
+        }
+
+        #gauge-75 {
+            -webkit-transform: translate(420%, -140%);
+        }
+
+        #gauge-100 {
+            -webkit-transform: translate(370%, 135%);
+        }
+
+        #gauge-dial-container {
+            position: relative;
+            top: 16%;
+        }
+
+        #gauge {
+            width: 95%;
+        }
+
+        #gauge-label {
+            padding: 5px;
+            margin-left: 9%;
+            width: 80%;
+            color: black;
+            border-radius: 5px;
+        }
+
+        #validation-summary-container {
+            margin-left: 0%;
+            width: 44%;
+            float: right;
+            position: relative;
+        }
+
+        #validation-total {
+            position: relative;
+            height: 315px;
+            left: 8%;
+            float: left;
+            width: 84%;
+        }
+
+        #total-issues {
+            position: relative;
+            height: 47%;
+        }
+
+        #total-stat-value {
+            font-size: 2.9em;
+            word-wrap: break-word;
+            width: 100%;
+            position: absolute;
+            top: 32%;
+        }
+
+        #total-stat-label {
+            position: relative;
+            width: 100%;
+            top: 60%;
+        }
+
+        .validation-status-label {
+            text-align: left;
+        }
+
+        .validation-status-label:nth-child(odd) {
+            padding-top: 4%;
+        }
+
+        .validation-status-value {
+            padding: 4px;
+            margin-top: 4%;
+            color: black;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        #issue-distribution {
+            height: 825px;
+            width: 93.5%;
+            margin-top: 0%;
+        }
+
+        #issue-distribution-title {
+            margin-top: 3%;
+            margin-bottom: 4%;
+            font-size: 1.2em;
+        }
+
+        #validation-vs-linting {
+            margin-left: 4%;
+            height: 333px;
+        }
+
+        #validation-stats {
+            width: 62%;
+            float: left;
+            height: 333px;
+        }
+
+        .validation-stats-tower {
+            width: 25%;
+            float: left;
+        }
+
+        .validation-group {
+            text-align: center;
+            padding: 5%;
+            width: 80%;
+            margin: 7px 0px 7px 0px;
+            border-radius: 5px;
+            color: white;
+            position: relative;
+            left: 4.5%;
+            height: 57px;
+        }
+
+        .validation-blocking {
+            color: #ff0002;
+            border: 1px solid #ff0002;
+        }
+
+        .validation-error {
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+
+        .validation-warn {
+            color: #feca57;
+            border: 1px solid #feca57;
+        }
+
+        .validation-info {
+            color: #74b9ff;
+            border: 1px solid #74b9ff;
+        }
+
+        .stat-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            position: relative;
+            top: 5%;
+        }
+
+        .stat-name {
+            font-size: 0.8em;
+            position: relative;
+            top: 5%;
+        }
+
+        .validation-stat-separator {
+            position: relative;
+            top: 50%;
+            font-size: 1.2em;
+            width: 12.5%;
+            float: left;
+        }
+
+        #must-vs-recommended {
+            position: relative;
+            float: right;
+            left: -4.5%;
+            height: 275px;
+            top: 10%;
+        }
+
+        #donut-chart-container {
+            display: inline-block;
+            height: 72%;
+            position: relative;
+        }
+
+        #donut-chart-legend {
+            position: relative;
+            top: 5.8%;
+            text-align: left;
+            height: 20%;
+        }
+
+        .chart-legend-item {
+            width: 25px;
+            height: 10px;
+            display: inline-block;
+            border-radius: 10px;
+            margin-right: 7px;
+        }
+
+        #chart-legend-item1 {
+            background-color: #ff6b6b;
+        }
+
+        #chart-legend-item2 {
+            background-color: #74b9ff;
+        }
+
+        .chart-legend-title {
+            font-size: 1em;
+        }
+
+        #validation-semantic-stats {
+            width: 95%;
+            margin: 3% 0% 0% 5%;
+            height: 395px;
+        }
+
+        #validation-by-type {
+            width: 61%;
+            float: left;
+        }
+
+        .bar-item {
+            height: 65px;
+            text-align: left;
+            color: white;
+            font-size: 1em;
+        }
+
+        .bar-item-label {
+            position: relative;
+            margin: 2% 0% 2% 0%;
+        }
+
+        #chart1, #chart2, #chart3, #chart4, #chart5 {
+            width: 100%;
+        }
+
+        #chart1, #chart1-print, #chart2, #chart2-print, #chart3, #chart3-print, #chart4, #chart4-print, #chart5, #chart5-print {
+            border-radius: 10px;
+        }
+
+        #validation-files-container {
+            position: relative;
+            top: 29%;
+            float: right;
+            left: -6.5%;
+        }
+
+        #validation-files-label {
+            position: relative;
+            top: 5%;
+        }
+
+        @media only screen and (max-width: 750px) {
+
+            #dashboard {
+                height: 2055px;
+                width: 385px;
+                position: relative;
+                left: 15%;
+            }
+
+            #score-gauge-container {
+                width: 91%;
+            }
+
+            #validation-summary-container {
+                width: 91%;
+                margin-left: 0%;
+            }
+
+            .validation-status-value {
+                margin-top: 2%;
+            }
+
+            #issue-distribution {
+                width: 91%;
+                height: 1285px;
+                margin-top: 3%;
+            }
+
+            #validation-vs-linting, #validation-semantic-stats {
+                display: block;
+            }
+
+            #validation-vs-linting {
+                margin-left: 8%;
+                height: 320px;
+            }
+
+            #validation-stats {
+                width: 92%;
+                height: 320px;
+            }
+
+            .stat-value {
+                font-size: 0.9em;
+            }
+
+            .stat-name {
+                font-size: 0.6em;
+            }
+
+            .validation-stats-tower {
+                width: 26%;
+            }
+
+            .validation-stat-separator {
+                font-size: 1.2em;
+                width: 11%;
+                top: 50%;
+            }
+
+            #must-vs-recommended {
+                width: 87%;
+                margin-left: 0%;
+                left: -10%;
+                top: 10%;
+            }
+
+            #validation-semantic-stats {
+                height: 530px;
+                width: 85%;
+                margin-top: 280px;
+                margin-left: 8%;
+            }
+
+            #validation-by-type {
+                width: 100%;
+                margin-top: 20%;
+            }
+
+            #chart1, #chart2, #chart3, #chart4, #chart5 {
+                width: 90%;
+            }
+
+            #validation-files-container {
+                top: 4%;
+                margin-left: 0%;
+                float: left;
+                left: 0%;
+                width: 100%;
+            }
+
+        }
+
+        @media only screen and (min-width: 450px) and (max-width: 750px) {
+
+            #chart1, #chart2, #chart3, #chart4, #chart5 {
+                width: 100%;
+            }
+
+        }
+
+        @media print {
+
+            .print-only {
+                display: block;
+            }
+
+            .screen-only {
+                display: none;
+            }
+
+            #issue-distribution {
+                width: 93.5%;
+            }
+
+        }
+
+        @media screen {
+
+            .print-only {
+                display: none;
+            }
+
+            .screen-only {
+                display: block;
+            }
+
+        }
+
+
+    </style>
+    <script>
+      function toggleElementVisibility(element, showText, hideText) {
+        var collapsibleContent = element.nextElementSibling;
+        collapsibleContent.classList.toggle('show');
+        if (collapsibleContent.classList.contains('show')) {
+            element.textContent = hideText;
+        } else {
+            element.textContent = showText;
+        }
+      }
+    </script>
+    <script src="https://bernii.github.io/gauge.js/dist/gauge.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/0.7.0/chartjs-plugin-datalabels.js"></script>
+    <script>
+      function loadScoreGauge(score) {
+        var opts = {
+          angle: 0,
+          lineWidth: 0.2,
+          radiusScale: 1,
+          pointer: {
+            length: 0.42,
+            strokeWidth: 0.035,
+            color: 'white'
+          },
+          limitMax: true,
+          limitMin: true,
+          generateGradient: true,
+          highDpiSupport: true,
+          staticZones: [
+            {strokeStyle: "#ff6b6b", min: 0, max: 50},
+            {strokeStyle: "#feca57", min: 50, max: 95},
+            {strokeStyle: "#1abc9c", min: 95, max: 100}
+          ]
+        };
+        document.addEventListener("DOMContentLoaded", function() {
+          var target = document.getElementById('gauge');
+          var gauge = new Gauge(target).setOptions(opts);
+          gauge.maxValue = 100;
+          gauge.setMinValue(0);
+          gauge.animationSpeed = 30;
+          gauge.set(score);
+        });
+      }
+
+      function createDistributionBarChart(canvasId, data, backgroundColors) {
+        document.addEventListener("DOMContentLoaded", function() {
+          var ctx = document.getElementById(canvasId).getContext("2d");
+          Chart.plugins.register(ChartDataLabels);
+
+          new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+              datasets: [{
+                data: data,
+                backgroundColor: backgroundColors,
+                barThickness: 100,
+              }]
+            },
+            options: {
+              responsive: true,
+              id: canvasId,
+              devicePixelRatio: 2.5,
+              animation: true,
+              legend: {
+                display: false
+              },
+              tooltips: {
+                enabled: true
+              },
+              plugins: {
+                datalabels: {
+                  anchor: 'end',
+                  align: function(context) {
+                    return context.dataset.data[context.dataIndex] > 86
+                      ? 'start' : 'end';
+                  },
+                  color: 'white',
+                  formatter: function (value, context) {
+                    return value + "%";
+                  },
+                  font: {
+                    family: 'Rubik, sans-serif',
+                    size: 15
+                  }
+                },
+              },
+              scales: {
+                xAxes: [{
+                  display: false,
+                  ticks: {
+                    beginAtZero: true,
+                    max: 100
+                  }
+                }],
+                yAxes: [{
+                  display: false
+                }]
+              }
+            }
+          });
+        });
+      }
+
+      function createFileCountDonut(fileCount) {
+        document.addEventListener("DOMContentLoaded", function() {
+          var canvas = document.getElementById('validation-files');
+          var ctx = canvas.getContext('2d');
+
+          var size = 140;
+          canvas.style.width = size + "px";
+          canvas.style.height = size + "px";
+
+          var scale = 2.5;
+
+          canvas.width = Math.floor(size * scale);
+          canvas.height = Math.floor(size * scale);
+          ctx.scale(scale, scale);
+
+          // Draw the outer circle
+          ctx.beginPath();
+          ctx.arc(size/2, size/2, 60, 0, 2 * Math.PI);
+          ctx.strokeStyle = '#34495e';
+          ctx.lineWidth = 3;
+          ctx.fillStyle = '#34495e';
+          ctx.stroke();
+          ctx.fill();
+          ctx.closePath();
+
+          
+          ctx.beginPath();
+          ctx.arc(size/2, size/2, 55, 0, 2 * Math.PI);
+          ctx.strokeStyle = '#34495e';
+          ctx.lineWidth = 3;
+          ctx.fillStyle = '#161f27';
+          ctx.stroke();
+          ctx.fill();
+          ctx.closePath();
+
+          var x = size / 2;
+          var y = size / 2;
+
+          
+          ctx.font = '1.7em Rubik, sans-serif';
+          ctx.fillStyle = 'white';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(fileCount, x, y);
+        });
+      }
+
+      function createPieChart(mustFixPercentage, recommendedFixPercentage) {
+        document.addEventListener("DOMContentLoaded", function() {
+            var data = {
+                labels: ['Must fix', 'Recommended to fix'],
+                datasets: [{
+                    data: [mustFixPercentage, recommendedFixPercentage],
+                    backgroundColor: ['#ff6b6b', '#74b9ff'],
+                    borderWidth: 0
+                }]
+            };
+
+            var ctx = document.getElementById('donut-chart').getContext('2d');
+
+            Chart.plugins.register(ChartDataLabels);
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    animation: true,
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                      enabled: true
+                    },
+                    devicePixelRatio: 2.5,
+                    maintainAspectRatio: false,
+                    cutoutPercentage: 87,
+                    plugins: {
+                        datalabels: {
+                            font: {
+                                family: 'Rubik, sans-serif',
+                                size: 15
+                            },
+                            color: 'white',
+                             formatter: function (value, context) {
+                                return value + "%";
+                            },
+                            anchor: 'start',
+                            align: 'end',
+                            offset: 15
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            top: 30,
+                            left: 30,
+                            bottom: 30,
+                            right: 30
+                        }
+                    }
+                }
+            });
+        });
+      }
+
+      Chart.plugins.register({
+        beforeDraw: function(chart) {
+          var id = chart.canvas.getAttribute('id');
+          if (id === "chart1" ||
+            id === "chart1-print" ||
+            id === "chart2" ||
+            id === "chart2-print" ||
+            id === "chart3" ||
+            id === "chart3-print" ||
+            id === "chart4" ||
+            id === "chart4-print" ||
+            id === "chart5" ||
+            id === "chart5-print") {
+            var ctx = chart.chart.ctx;
+            var chartArea = chart.chartArea;
+            ctx.fillStyle = '#34495e';
+            ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
+          }
+        }
+      });
+
+      loadScoreGauge(81.8);
+      createDistributionBarChart("chart1", ["3.6"], ['#ff7675']);
+      createDistributionBarChart("chart1-print", ["3.6"], ['#ff7675']);
+      createDistributionBarChart("chart2", ["0.9"], ['#00cec9']);
+      createDistributionBarChart("chart2-print", ["0.9"], ['#00cec9']);
+      createDistributionBarChart("chart3", ["75.8"], ['#74b9ff']);
+      createDistributionBarChart("chart3-print", ["75.8"], ['#74b9ff']);
+      createDistributionBarChart("chart4", ["0.4"], ['#a29bfe']);
+      createDistributionBarChart("chart4-print", ["0.4"], ['#a29bfe']);
+      createDistributionBarChart("chart5", ["19.3"], ['#feca57']);
+      createDistributionBarChart("chart5-print", ["19.3"], ['#feca57']);
+      createFileCountDonut("1");
+      createPieChart(0.0, 100.0);
+
+</script>
+  </head>
+  <body>
+    <h1 id="apimatic-validation-report">APIMatic Validation Report</h1>
+    <h2 id="introduction">Introduction</h2>
+    <p>The following report is addressed to <b>PetStore</b>. It was compiled on <b>June 05, 2024</b> using APIMatic and contains a validation summary of all API definitions involved.</p>
+    <h3 id="what-is-apimatic">What is APIMatic?</h3>
+    <p>
+      <a href="https://apimatic.io">APIMatic</a> is a Developer Experience platform for Web APIs that allows auto-generation of SDKs in multiple programming languages along with usage examples, interactive API reference documentation and more. Our goal is to enable API providers to minimize onboarding time and enhance API adoption.</p>
+    <h3 id="api-definition-validation-using-apimatic">API Definition Validation Using APIMatic</h3>
+    <p>Since APIMatic relies on API specifications to generate documentation and SDKs, it is imperative for API definition files to be syntactically and semantically correct. To maintain the quality of generated artifacts, APIMatic subjects APIs to extensive validation beyond syntactic correctness. The results of this validation process can be found in this report. If any blockers are found, documentation and SDKs cannot be generated. To learn more, you may visit our official documentation <a href="https://docs.apimatic.io/validate-lint-apis/overview/">here</a>.</p>
+    <h3 id="how-to-fix-validation-issues">How to Fix Validation Issues?</h3>
+    <p>For resolving any issues listed in the report or for simply re-validating the API definition files after any changes, we encourage the use of our VS Code extension <b><a href="https://www.apimatic.io/solution/fix-my-openapi">Fix My OpenAPI</a></b> that comes with dedicated views and other features to simplify any API definition's validation and improvement process.</p>
+    <h3 id="contact-us">Contact Us</h3>
+    <p>If you have any queries or concerns, please do not hesitate to reach out to us at <a href="mailto:support@apimatic.io">support@apimatic.io</a> .</p>
+    <div class="page-break-before"></div>
+    <h2 id="table-of-contents">Table of Contents</h2>
+    <ul class="table-of-contents-list">
+      <li>
+        <a href="#data-overview">Data Overview</a>
+      </li>
+      <li>
+        <a href="#validation-summary">Validation Summary</a>
+      </li>
+      <li>
+        <a href="#validation-issues-0">Validation Issues (0)</a>
+      </li>
+      <li>
+        <a href="#lint-issues-19">Lint Issues (19)</a>
+        <ul>
+          <li>
+            <a href="#span-classheading-severity-heading-errorerrorspan-issue-no-1---xml-name-is-required-for-schema-property-2">
+              <span class="heading-severity heading-error">Error</span> Issue No. 1 - XML name is required for schema property. (2)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-errorerrorspan-issue-no-2---invalid-xml-name-found-1">
+              <span class="heading-severity heading-error">Error</span> Issue No. 2 - Invalid XML name found. (1)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-3---inline-complex-schema-definition-found-10">
+              <span class="heading-severity heading-warn">Warn</span> Issue No. 3 - Inline complex schema definition found. (10)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-4---inline-enum-schema-definition-found-3">
+              <span class="heading-severity heading-warn">Warn</span> Issue No. 4 - Inline enum schema definition found. (3)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-5---no-success-response-definition-found-in-the-responses-list-7">
+              <span class="heading-severity heading-warn">Warn</span> Issue No. 5 - No success response definition found in the responses list. (7)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-6---operation-object-parameters-are-out-of-order-1">
+              <span class="heading-severity heading-warn">Warn</span> Issue No. 6 - Operation object parameters are out of order. (1)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-7---parameter-object-description-contained-leadingtrailing-white-space-characters-1">
+              <span class="heading-severity heading-warn">Warn</span> Issue No. 7 - Parameter object description contained leading/trailing white-space characters. (1)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-8---component-was-defined-but-never-used-3">
+              <span class="heading-severity heading-warn">Warn</span> Issue No. 8 - Component was defined but never used. (3)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-9---missing-or-empty-description-property-for-server-object-1">
+              <span class="heading-severity heading-info">Info</span> Issue No. 9 - Missing or empty description property for server object. (1)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-10---schema-object-description-is-missing-52">
+              <span class="heading-severity heading-info">Info</span> Issue No. 10 - Schema object description is missing. (52)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-11---schema-object-exampledefault-value-is-missing-48">
+              <span class="heading-severity heading-info">Info</span> Issue No. 11 - Schema object example/default value is missing. (48)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-12---media-type-object-example-is-missing-43">
+              <span class="heading-severity heading-info">Info</span> Issue No. 12 - Media type object example is missing. (43)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-13---response-content-is-missing-25">
+              <span class="heading-severity heading-info">Info</span> Issue No. 13 - Response content is missing. (25)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-14---parameter-object-example-is-missing-17">
+              <span class="heading-severity heading-info">Info</span> Issue No. 14 - Parameter object example is missing. (17)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-15---property-explode-will-have-no-effect-on-parameter-of-this-type-1">
+              <span class="heading-severity heading-info">Info</span> Issue No. 15 - Property `explode` will have no effect on parameter of this type. (1)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-16---parameter-object-description-is-missing-1">
+              <span class="heading-severity heading-info">Info</span> Issue No. 16 - Parameter object description is missing. (1)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-17---requestbody-object-description-is-missing-3">
+              <span class="heading-severity heading-info">Info</span> Issue No. 17 - RequestBody object description is missing. (3)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-18---examples-are-missing-from-header-object-2">
+              <span class="heading-severity heading-info">Info</span> Issue No. 18 - Examples are missing from header object. (2)</a>
+          </li>
+          <li>
+            <a href="#span-classheading-severity-heading-infoinfospan-issue-no-19---description-is-missing-from-security-scheme-object-2">
+              <span class="heading-severity heading-info">Info</span> Issue No. 19 - Description is missing from security scheme object. (2)</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div class="page-break-before"></div>
+    <h2 id="data-overview">Data Overview</h2>
+    <p>This report analyzes an API named <i><code>Swagger Petstore - OpenAPI 3.0</code></i> which is defined using the specification format <i><code>OpenAPI v3.0 (YAML)</code></i>. The files involved are listed below: </p>
+    <table>
+      <tr>
+        <th>#</th>
+        <th>File Path</th>
+        <th>File Specification Format</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>
+          <i>
+            <code>openapi.yaml</code>
+          </i>
+        </td>
+        <td>OpenAPI v3.0 (YAML) <i>(Main File)</i></td>
+      </tr>
+    </table>
+    <div class="page-break-before"></div>
+    <h2 id="validation-summary">Validation Summary</h2>
+    <div id="dashboard">
+      <div id="row1">
+        <div id="score-gauge-container" class="container">
+          <div id="score-container">
+            <div id="gauge-score-title">Score</div>
+            <div id="gauge-score">81.8%</div>
+          </div>
+          <div id="gauge-container">
+            <div id="gauge-labels">
+              <div id="gauge-0">0</div>
+              <div id="gauge-25">25</div>
+              <div id="gauge-50">50</div>
+              <div id="gauge-75">75</div>
+              <div id="gauge-100">100</div>
+            </div>
+            <div id="gauge-dial-container">
+              <canvas id="gauge"></canvas>
+            </div>
+          </div>
+          <div id="gauge-label" class="good">Good but can be better</div>
+        </div>
+        <div id="validation-summary-container" class="container">
+          <div id="validation-total">
+            <div id="total-issues">
+              <div id="total-stat-value">223</div>
+              <div id="total-stat-label">Total No. of Issues</div>
+            </div>
+            <div class="validation-status-label">
+              <span>Validation: </span>
+              <div class="validation-status-value great">Passed</div>
+            </div>
+            <div class="validation-status-label">
+              <span>Linting: </span>
+              <div class="validation-status-value bad">Failed with errors</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="row2">
+        <div id="issue-distribution" class="container">
+          <div id="issue-distribution-title">Issues Distribution</div>
+          <div id="validation-vs-linting">
+            <div id="validation-stats">
+              <div class="validation-stats-tower">
+                <div>Total</div>
+                <div class="validation-group validation-blocking">
+                  <div class="stat-value">0</div>
+                  <div class="stat-name">Blocking</div>
+                </div>
+                <div class="validation-group validation-error">
+                  <div class="stat-value">3</div>
+                  <div class="stat-name">Errors</div>
+                </div>
+                <div class="validation-group validation-warn">
+                  <div class="stat-value">25</div>
+                  <div class="stat-name">Warnings</div>
+                </div>
+                <div class="validation-group validation-info">
+                  <div class="stat-value">195</div>
+                  <div class="stat-name">Information</div>
+                </div>
+              </div>
+              <div class="validation-stat-separator">=</div>
+              <div class="validation-stats-tower">
+                <div>Validation</div>
+                <div class="validation-group validation-blocking">
+                  <div class="stat-value">0</div>
+                  <div class="stat-name">Blocking</div>
+                </div>
+                <div class="validation-group validation-error">
+                  <div class="stat-value">0</div>
+                  <div class="stat-name">Errors</div>
+                </div>
+                <div class="validation-group validation-warn">
+                  <div class="stat-value">0</div>
+                  <div class="stat-name">Warnings</div>
+                </div>
+                <div class="validation-group validation-info">
+                  <div class="stat-value">0</div>
+                  <div class="stat-name">Information</div>
+                </div>
+              </div>
+              <div class="validation-stat-separator">+</div>
+              <div class="validation-stats-tower">
+                <div>Linting</div>
+                <div class="validation-group validation-blocking">
+                  <div class="stat-value">0</div>
+                  <div class="stat-name">Blocking</div>
+                </div>
+                <div class="validation-group validation-error">
+                  <div class="stat-value">3</div>
+                  <div class="stat-name">Errors</div>
+                </div>
+                <div class="validation-group validation-warn">
+                  <div class="stat-value">25</div>
+                  <div class="stat-name">Warnings</div>
+                </div>
+                <div class="validation-group validation-info">
+                  <div class="stat-value">195</div>
+                  <div class="stat-name">Information</div>
+                </div>
+              </div>
+            </div>
+            <div id="must-vs-recommended">
+              <div id="donut-chart-container">
+                <canvas id="donut-chart" width="200px" height="185px"></canvas>
+              </div>
+              <div id="donut-chart-legend">
+                <div>
+                  <div id="chart-legend-item1" class="chart-legend-item"></div>
+                  <span class="chart-legend-title">Must fix</span>
+                </div>
+                <div>
+                  <div id="chart-legend-item2" class="chart-legend-item"></div>
+                  <span class="chart-legend-title">Recommended to fix</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="validation-semantic-stats">
+            <div id="validation-by-type">
+              <div class="bar-item print-only">
+                <p class="bar-item-label">Standard Non-Compliance</p>
+                <canvas id="chart1-print" width="430" height="25px"></canvas>
+              </div>
+              <div class="bar-item screen-only">
+                <p class="bar-item-label">Standard Non-Compliance</p>
+                <canvas id="chart1" height="25px"></canvas>
+              </div>
+              <div class="bar-item print-only">
+                <p class="bar-item-label">Syntax</p>
+                <canvas id="chart2-print" width="430" height="25px"></canvas>
+              </div>
+              <div class="bar-item screen-only">
+                <p class="bar-item-label">Syntax</p>
+                <canvas id="chart2" height="25px"></canvas>
+              </div>
+              <div class="bar-item print-only">
+                <p class="bar-item-label">Documentation</p>
+                <canvas id="chart3-print" width="430" height="25px"></canvas>
+              </div>
+              <div class="bar-item screen-only">
+                <p class="bar-item-label">Documentation</p>
+                <canvas id="chart3" height="25px"></canvas>
+              </div>
+              <div class="bar-item print-only">
+                <p class="bar-item-label">Code Generation</p>
+                <canvas id="chart4-print" width="430" height="25px"></canvas>
+              </div>
+              <div class="bar-item screen-only">
+                <p class="bar-item-label">Code Generation</p>
+                <canvas id="chart4" height="25px"></canvas>
+              </div>
+              <div class="bar-item print-only">
+                <p class="bar-item-label">Other</p>
+                <canvas id="chart5-print" width="430" height="25px"></canvas>
+              </div>
+              <div class="bar-item screen-only">
+                <p class="bar-item-label">Other</p>
+                <canvas id="chart5" height="25px"></canvas>
+              </div>
+            </div>
+            <div id="validation-files-container">
+              <canvas id="validation-files" width="140px" height="130px"></canvas>
+              <div id="validation-files-label">out of 1 files affected</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-break-before"></div>
+    <h2 id="validation-issues-0">Validation Issues</h2>
+    <p>No validation issues were found.</p>
+    <div class="page-break-before"></div>
+    <h2 id="lint-issues-19">Lint Issues</h2>
+    <p>A total no. of <i><code>19</code></i> lint issues were found which are listed below:</p>
+    <ul class="table-of-contents-list">
+      <li>
+        <a href="#span-classheading-severity-heading-errorerrorspan-issue-no-1---xml-name-is-required-for-schema-property-2">
+          <span class="heading-severity heading-error">Error</span> Issue No. 1 - XML name is required for schema property. (2)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-errorerrorspan-issue-no-2---invalid-xml-name-found-1">
+          <span class="heading-severity heading-error">Error</span> Issue No. 2 - Invalid XML name found. (1)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-3---inline-complex-schema-definition-found-10">
+          <span class="heading-severity heading-warn">Warn</span> Issue No. 3 - Inline complex schema definition found. (10)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-4---inline-enum-schema-definition-found-3">
+          <span class="heading-severity heading-warn">Warn</span> Issue No. 4 - Inline enum schema definition found. (3)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-5---no-success-response-definition-found-in-the-responses-list-7">
+          <span class="heading-severity heading-warn">Warn</span> Issue No. 5 - No success response definition found in the responses list. (7)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-6---operation-object-parameters-are-out-of-order-1">
+          <span class="heading-severity heading-warn">Warn</span> Issue No. 6 - Operation object parameters are out of order. (1)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-7---parameter-object-description-contained-leadingtrailing-white-space-characters-1">
+          <span class="heading-severity heading-warn">Warn</span> Issue No. 7 - Parameter object description contained leading/trailing white-space characters. (1)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-warnwarnspan-issue-no-8---component-was-defined-but-never-used-3">
+          <span class="heading-severity heading-warn">Warn</span> Issue No. 8 - Component was defined but never used. (3)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-9---missing-or-empty-description-property-for-server-object-1">
+          <span class="heading-severity heading-info">Info</span> Issue No. 9 - Missing or empty description property for server object. (1)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-10---schema-object-description-is-missing-52">
+          <span class="heading-severity heading-info">Info</span> Issue No. 10 - Schema object description is missing. (52)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-11---schema-object-exampledefault-value-is-missing-48">
+          <span class="heading-severity heading-info">Info</span> Issue No. 11 - Schema object example/default value is missing. (48)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-12---media-type-object-example-is-missing-43">
+          <span class="heading-severity heading-info">Info</span> Issue No. 12 - Media type object example is missing. (43)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-13---response-content-is-missing-25">
+          <span class="heading-severity heading-info">Info</span> Issue No. 13 - Response content is missing. (25)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-14---parameter-object-example-is-missing-17">
+          <span class="heading-severity heading-info">Info</span> Issue No. 14 - Parameter object example is missing. (17)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-15---property-explode-will-have-no-effect-on-parameter-of-this-type-1">
+          <span class="heading-severity heading-info">Info</span> Issue No. 15 - Property `explode` will have no effect on parameter of this type. (1)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-16---parameter-object-description-is-missing-1">
+          <span class="heading-severity heading-info">Info</span> Issue No. 16 - Parameter object description is missing. (1)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-17---requestbody-object-description-is-missing-3">
+          <span class="heading-severity heading-info">Info</span> Issue No. 17 - RequestBody object description is missing. (3)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-18---examples-are-missing-from-header-object-2">
+          <span class="heading-severity heading-info">Info</span> Issue No. 18 - Examples are missing from header object. (2)</a>
+      </li>
+      <li>
+        <a href="#span-classheading-severity-heading-infoinfospan-issue-no-19---description-is-missing-from-security-scheme-object-2">
+          <span class="heading-severity heading-info">Info</span> Issue No. 19 - Description is missing from security scheme object. (2)</a>
+      </li>
+    </ul>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-errorerrorspan-issue-no-1---xml-name-is-required-for-schema-property-2">
+      <span class="heading-severity heading-error">Error</span> Issue No. 1 - XML name is required for schema property. (2)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>required-xml-name-in-schema-property</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-apimatic-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI XML</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>API Transformer</code>
+          </i>, <i><code>Code Generation</code></i>, <i><code>Developer Experience Portal</code></i></td>
+      </tr>
+    </table>
+    <h4 id="description">Description</h4>
+    <p>In OpenAPI specifications, when using XML for schema properties, the XML name is required to be specified. An XML name should be specified for schema properties to ensure that the schema is properly defined and can be used correctly.</p>
+    <h4 id="tips">Tips</h4>
+    <ul>
+      <li>
+Check the OpenAPI specification to confirm if any schema property is missing an XML name.</li>
+      <li>
+If any schema property is missing an XML name, update the specification to include an XML name for the schema property.</li>
+    </ul>
+    <h4 id="for-more-information">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.0.md#xml-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.0.md#xml-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-2">Affected Components (2)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>744</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>744</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; photoUrls &gt; xml</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Caller Path: </b>-</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>752</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>752</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; tags &gt; xml</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Caller Path: </b>-</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-errorerrorspan-issue-no-2---invalid-xml-name-found-1">
+      <span class="heading-severity heading-error">Error</span> Issue No. 2 - Invalid XML name found. (1)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>valid-xml-name</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-apimatic-syntax-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Syntax</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI XML</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>API Transformer</code>
+          </i>, <i><code>Code Generation</code></i>, <i><code>Developer Experience Portal</code></i></td>
+      </tr>
+    </table>
+    <h4 id="description-1">Description</h4>
+    <p>Name assigned to an XML entity must follow W3C Extensible Markup Language recommendations.</p>
+    <h4 id="tips-1">Tips</h4>
+    <ul>
+      <li>
+Ensure that XML name is valid.</li>
+      <li>
+Element names are case-sensitive</li>
+      <li>
+Element names must start with a letter or underscore</li>
+      <li>
+Element names cannot start with the letters xml (or XML, or Xml, etc)</li>
+      <li>
+Element names can contain letters, digits, hyphens, underscores, and periods</li>
+      <li>
+Element names cannot contain spaces</li>
+    </ul>
+    <h4 id="for-more-information-1">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#xml-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#xml-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-1">Affected Components (1)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>775</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>775</code></i>, <b>Line Pos: </b><i><code>26</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; ApiResponse &gt; xml &gt; name</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Xml Name: </b>##default</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-warnwarnspan-issue-no-3---inline-complex-schema-definition-found-10">
+      <span class="heading-severity heading-warn">Warn</span> Issue No. 3 - Inline complex schema definition found. (10)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>no-inline-complex-schema-definition</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-apimatic-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Schemas</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>API Transformer</code>
+          </i>, <i><code>Code Generation</code></i>, <i><code>Developer Experience Portal</code></i></td>
+      </tr>
+    </table>
+    <h4 id="description-2">Description</h4>
+    <p>A complex schema is one that may use one or more of the following constructs: `allOf`, `anyOf`, `oneOf`, `not`, `properties`. Such schema definitions must be added globally in the components/schemas section with a unique name and then referenced throughout the API document with that name. Inline definitions of such schemas are not recommended as for auto-generating SDKs/documentation the names of such schemas are deduced from the parent objects in which they are declared inline. The names deduced this way may not be user-friendly and can conflict with other definitions resulting in name duplication. This behavior can affect your output quality.</p>
+    <h4 id="tips-2">Tips</h4>
+    <ul>
+      <li>
+Ensure you are not using any of these constructs in your schema if it is an inline schema definition: `allOf`, `anyOf`, `oneOf`, `not`, `properties`.</li>
+      <li>
+Remove the inline schema definition and relocate it to the components/schemas section.</li>
+      <li>
+Define the inline schema globally in the components/schemas section with a unique name. Then reference it using $ref in your current object with a path like '#/components/schemas/&lt;global name&gt;'.</li>
+      <li>
+Ensure that no other inline schemas are defined.</li>
+      <li>
+If you wish to retain the inline schema definition, try adding a `title` property in the Schema Object definition with a unique name to improve output.</li>
+    </ul>
+    <h4 id="for-more-information-2">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#componentsObject">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#componentsObject</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-10">Affected Components (10)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>144</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>144</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>149</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>149</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>172</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>172</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>181</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>181</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>186</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>186</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>461</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>461</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/createWithList &gt; post &gt; requestBody &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>647</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>647</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Customer &gt; properties &gt; address</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>742</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>742</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; photoUrls</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>750</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>750</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; tags</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>791</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>791</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; components &gt; requestBodies &gt; UserArray &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-warnwarnspan-issue-no-4---inline-enum-schema-definition-found-3">
+      <span class="heading-severity heading-warn">Warn</span> Issue No. 4 - Inline enum schema definition found. (3)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>no-inline-enum-schema-definition</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-apimatic-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Schemas</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>API Transformer</code>
+          </i>, <i><code>Code Generation</code></i>, <i><code>Developer Experience Portal</code></i></td>
+      </tr>
+    </table>
+    <h4 id="description-3">Description</h4>
+    <p>Enum schema definitions must be added globally in the components/schemas section with a unique name and then referenced throughout the API document with that name. Inline definitions of enum schemas are not recommended as for auto-generating SDKs/documentation the names of such schemas are deduced from the parent objects in which they are declared inline. The names deduced this way may not be user-friendly and can conflict with other definitions resulting in name duplication. This behavior can affect your output quality.</p>
+    <h4 id="tips-3">Tips</h4>
+    <ul>
+      <li>
+Remove the inline enum schema definition and relocate it to the components/schemas section.</li>
+      <li>
+Define the enum schema globally in the components/schemas section with a unique name. Then reference it using $ref in your current object with a path like '#/components/schemas/&lt;global name&gt;'.</li>
+      <li>
+Ensure that no other inline enum schemas are defined.</li>
+      <li>
+If you wish to retain the inline schema definition, try adding a `title` property in the Schema Object definition with a unique name to improve output.</li>
+    </ul>
+    <h4 id="for-more-information-3">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#componentsObject">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#componentsObject</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-3">Affected Components (3)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>132</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>132</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>625</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>625</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order &gt; properties &gt; status</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>756</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>756</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; status</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-warnwarnspan-issue-no-5---no-success-response-definition-found-in-the-responses-list-7">
+      <span class="heading-severity heading-warn">Warn</span> Issue No. 5 - No success response definition found in the responses list. (7)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>at-least-one-success-response-exists</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-standards-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>Responses</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>API Transformer</code>
+          </i>, <i><code>Code Generation</code></i>, <i><code>Developer Experience Portal</code></i></td>
+      </tr>
+    </table>
+    <h4 id="description-4">Description</h4>
+    <p>The Responses Object must contain at least one response code which should be the response for a successful operation call e.g. 200.</p>
+    <h4 id="tips-4">Tips</h4>
+    <ul>
+      <li>
+Add an entry in the responses list for the default success response code of your operation/endpoint e.g. 200. If other success status codes and their definitions are well-known, add their entries too.</li>
+      <li>
+The successful response codes belong to the HTTP status code range of 2XX e.g. 200, 201, etc.</li>
+      <li>
+If all success responses possible for your operation share the same structure, you can define them once using the status code range 2XX instead of defining with an explicit code.</li>
+    </ul>
+    <h4 id="for-more-information-4">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#responses-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#responses-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#http-status-codes">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#http-status-codes</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#responses-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#responses-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#http-status-codes">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#http-status-codes</a>
+      </li>
+      <li>
+        <a href="https://www.rfc-editor.org/rfc/rfc7231#section-6">https://www.rfc-editor.org/rfc/rfc7231#section-6</a>
+      </li>
+      <li>
+        <a href="https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml">https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#response-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#response-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#response-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#response-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-7">Affected Components (7)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>253</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>253</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; post</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>280</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>280</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; delete</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>416</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>416</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; delete</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>440</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>440</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user &gt; post</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>527</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>527</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/logout &gt; get</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>583</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>583</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; put</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>599</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>599</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; delete</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-warnwarnspan-issue-no-6---operation-object-parameters-are-out-of-order-1">
+      <span class="heading-severity heading-warn">Warn</span> Issue No. 6 - Operation object parameters are out of order. (1)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>operation-optional-parameters-after-required-parameters</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-codegen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Operations</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Code Generation</code>
+          </i>, <i><code>Developer Experience Portal</code></i></td>
+      </tr>
+    </table>
+    <h4 id="description-5">Description</h4>
+    <p>For code generation purposes, it is recommended that optional parameters should be defined at the end of the Operation Object `parameters` list and not before or between required parameters.</p>
+    <h4 id="tips-5">Tips</h4>
+    <ul>
+      <li>
+Ensure that the parameters are in order.</li>
+      <li>
+Place all required parameters first.</li>
+      <li>
+Place all optional parameters at the end.</li>
+    </ul>
+    <h4 id="for-more-information-5">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#operation-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#operation-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameter-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameter-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-1-1">Affected Components (1)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>266</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>266</code></i>, <b>Line Pos: </b><i><code>17</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; delete</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-warnwarnspan-issue-no-7---parameter-object-description-contained-leadingtrailing-white-space-characters-1">
+      <span class="heading-severity heading-warn">Warn</span> Issue No. 7 - Parameter object description contained leading/trailing white-space characters. (1)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>no-trailing-leading-spaces-in-parameter-description</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-syntax-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Syntax</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Parameters</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-6">Description</h4>
+    <p>Description of a Parameter Object must not contain any leading or trailing white-space characters.</p>
+    <h4 id="tips-6">Tips</h4>
+    <ul>
+      <li>
+Remove all leading or trailing white-space characters such as spaces, tabs, or line breaks.</li>
+    </ul>
+    <h4 id="for-more-information-6">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameter-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameter-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-1-2">Affected Components (1)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>540</code></i>, <b>Line Pos: </b><i><code>24</code></i> - <b>Line No: </b><i><code>540</code></i>, <b>Line Pos: </b><i><code>84</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; get &gt; parameters &gt; 0 &gt; description</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-warnwarnspan-issue-no-8---component-was-defined-but-never-used-3">
+      <span class="heading-severity heading-warn">Warn</span> Issue No. 8 - Component was defined but never used. (3)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>at-least-one-component-reference</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-apimatic-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Components</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>API Transformer</code>
+          </i>, <i><code>Code Generation</code></i>, <i><code>Developer Experience Portal</code></i></td>
+      </tr>
+    </table>
+    <h4 id="description-7">Description</h4>
+    <p>A component that is defined globally using the 'components' root object property must be referenced at least once by any other object in the API specification document. Referencing is performed using $ref.</p>
+    <h4 id="tips-7">Tips</h4>
+    <ul>
+      <li>
+Ensure that each globally defined component is referenced at least once in the API.</li>
+      <li>
+A component can be referenced using $ref with a valid path that can begin with '#/components/'.</li>
+      <li>
+If a schema 'Pet' is defined under #/components/schemas, there must exist an object in the document that references this schema using a path like #/components/schemas/Pet.</li>
+      <li>
+The components section helps define reusable components. If a component definition is not expected to be used, it must be removed.</li>
+    </ul>
+    <h4 id="for-more-information-7">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#components-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#components-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-3-1">Affected Components (3)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>636</code></i>, <b>Line Pos: </b><i><code>5</code></i> - <b>Line No: </b><i><code>636</code></i>, <b>Line Pos: </b><i><code>13</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Unused Component Name: </b>Customer</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>777</code></i>, <b>Line Pos: </b><i><code>5</code></i> - <b>Line No: </b><i><code>777</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; requestBodies</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Unused Component Name: </b>Pet</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>786</code></i>, <b>Line Pos: </b><i><code>5</code></i> - <b>Line No: </b><i><code>786</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; components &gt; requestBodies</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Unused Component Name: </b>UserArray</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-9---missing-or-empty-description-property-for-server-object-1">
+      <span class="heading-severity heading-info">Info</span> Issue No. 9 - Missing or empty description property for server object. (1)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>server-description-exists</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Servers</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-8">Description</h4>
+    <p>The description property in the Server object provides a description of the server. It should not be missing or empty. The description helps API users understand the purpose and context of the server. Providing a description is an essential part of API documentation and helps to communicate the server's functionality to developers. A missing or empty description property can lead to confusion and ambiguity in the API documentation, making it difficult for developers to understand the API's intended purpose.</p>
+    <h4 id="tips-8">Tips</h4>
+    <ul>
+      <li>
+Add a non-empty description property to each server object, providing a brief description of the server's purpose, location, or other relevant details.</li>
+      <li>
+Ensure that the description property accurately reflects the intended use of the server and is clear and concise.</li>
+    </ul>
+    <h4 id="for-more-information-8">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#server-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#server-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-1-3">Affected Components (1)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>26</code></i>, <b>Line Pos: </b><i><code>5</code></i> - <b>Line No: </b><i><code>26</code></i>, <b>Line Pos: </b><i><code>6</code></i>, <b>Path: </b><i><code># &gt; servers &gt; 0</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-10---schema-object-description-is-missing-52">
+      <span class="heading-severity heading-info">Info</span> Issue No. 10 - Schema object description is missing. (52)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>schema-description-exists</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Schemas</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-9">Description</h4>
+    <p>The Schema Object must specify details about the schema or the type of data it represents, using the `description` property. The value of the description must be non-null and non-empty.</p>
+    <h4 id="tips-9">Tips</h4>
+    <ul>
+      <li>
+Ensure that the Schema Object contains the `description` property.</li>
+      <li>
+Ensure that Schema Object description value is not null or empty.</li>
+    </ul>
+    <h4 id="for-more-information-9">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-52">Affected Components (52)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>144</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>144</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>149</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>149</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>174</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>174</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; parameters &gt; 0 &gt; schema &gt; items</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>181</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>181</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>186</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>186</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>272</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>272</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; delete &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>312</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>312</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId}/uploadImage &gt; post &gt; requestBody &gt; content &gt; application/octet-stream &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>338</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>338</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/inventory &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>340</code></i>, <b>Line Pos: </b><i><code>19</code></i> - <b>Line No: </b><i><code>340</code></i>, <b>Line Pos: </b><i><code>20</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/inventory &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema &gt; additionalProperties</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>461</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>461</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/createWithList &gt; post &gt; requestBody &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>513</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>513</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>516</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>516</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>607</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>607</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>610</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>610</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order &gt; properties &gt; id</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>614</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>614</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order &gt; properties &gt; petId</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>618</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>618</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order &gt; properties &gt; quantity</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>622</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>622</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order &gt; properties &gt; shipDate</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>633</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>633</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order &gt; properties &gt; complete</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>637</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>637</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Customer</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>640</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>640</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Customer &gt; properties &gt; id</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>644</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>644</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Customer &gt; properties &gt; username</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>647</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>647</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Customer &gt; properties &gt; address</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>656</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>656</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Address</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>659</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>659</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Address &gt; properties &gt; street</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>662</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>662</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Address &gt; properties &gt; city</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>665</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>665</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Address &gt; properties &gt; state</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>668</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>668</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Address &gt; properties &gt; zip</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>673</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>673</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Category</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>676</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>676</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Category &gt; properties &gt; id</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>680</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>680</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Category &gt; properties &gt; name</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>685</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>685</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; User</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>688</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>688</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; User &gt; properties &gt; id</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>692</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>692</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; User &gt; properties &gt; username</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>695</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>695</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; User &gt; properties &gt; firstName</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>698</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>698</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; User &gt; properties &gt; lastName</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>701</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>701</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; User &gt; properties &gt; email</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>704</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>704</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; User &gt; properties &gt; password</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>707</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>707</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; User &gt; properties &gt; phone</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>717</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>717</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Tag</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>720</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>720</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Tag &gt; properties &gt; id</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>723</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>723</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Tag &gt; properties &gt; name</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>727</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>727</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>733</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>733</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; id</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>737</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>737</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; name</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>742</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>742</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; photoUrls</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>746</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>746</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; photoUrls &gt; items</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>750</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>750</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; tags</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>765</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>765</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; ApiResponse</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>768</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>768</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; ApiResponse &gt; properties &gt; code</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>771</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>771</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; ApiResponse &gt; properties &gt; type</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>773</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>773</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; ApiResponse &gt; properties &gt; message</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>791</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>791</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; components &gt; requestBodies &gt; UserArray &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-11---schema-object-exampledefault-value-is-missing-48">
+      <span class="heading-severity heading-info">Info</span> Issue No. 11 - Schema object example/default value is missing. (48)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>schema-example-or-default-value-exists</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Schemas</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-10">Description</h4>
+    <p>Schema Object must specify a non-null, non-empty example value using the `example` property or a default value using the `default` property if applicable.</p>
+    <h4 id="tips-10">Tips</h4>
+    <ul>
+      <li>
+If the schema definition has a default value, it must be specified using the `default` value.</li>
+      <li>
+If the schema has no default value, ensure that the `example` property is present in the Schema Object.</li>
+      <li>
+Ensure that the schema example or default value is not empty or null.</li>
+      <li>
+The example or default value specified must be valid in accordance with the schema type definition.</li>
+    </ul>
+    <h4 id="for-more-information-10">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schema-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-48">Affected Components (48)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>144</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>144</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>149</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>149</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>172</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>172</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>174</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>174</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; parameters &gt; 0 &gt; schema &gt; items</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>181</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>181</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>186</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>186</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>208</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>208</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; get &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>241</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>241</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; post &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>247</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>247</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; post &gt; parameters &gt; 1 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>252</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>252</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; post &gt; parameters &gt; 2 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>272</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>272</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; delete &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>278</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>278</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; delete &gt; parameters &gt; 1 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>300</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>300</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId}/uploadImage &gt; post &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>307</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>307</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId}/uploadImage &gt; post &gt; parameters &gt; 1 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>312</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>312</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId}/uploadImage &gt; post &gt; requestBody &gt; content &gt; application/octet-stream &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>338</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>338</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/inventory &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>340</code></i>, <b>Line Pos: </b><i><code>19</code></i> - <b>Line No: </b><i><code>340</code></i>, <b>Line Pos: </b><i><code>20</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/inventory &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema &gt; additionalProperties</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>386</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>386</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; get &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>414</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>414</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; delete &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>461</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>461</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/createWithList &gt; post &gt; requestBody &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>489</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>489</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>495</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>495</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; parameters &gt; 1 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>513</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>513</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>516</code></i>, <b>Line Pos: </b><i><code>17</code></i> - <b>Line No: </b><i><code>516</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>543</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>543</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; get &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>570</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>570</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; put &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>598</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>598</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; delete &gt; parameters &gt; 0 &gt; schema</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>607</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>607</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>622</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>622</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order &gt; properties &gt; shipDate</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>633</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>633</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Order &gt; properties &gt; complete</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>637</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>637</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Customer</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>647</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>647</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Customer &gt; properties &gt; address</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>656</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>656</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Address</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>673</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>673</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Category</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>685</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>685</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; User</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>717</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>717</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Tag</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>720</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>720</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Tag &gt; properties &gt; id</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>723</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>723</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Tag &gt; properties &gt; name</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>727</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>727</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>742</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>742</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; photoUrls</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>746</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>746</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; photoUrls &gt; items</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>750</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>750</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; tags</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>756</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>756</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; Pet &gt; properties &gt; status</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>765</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>765</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; ApiResponse</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>768</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>768</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; ApiResponse &gt; properties &gt; code</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>771</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>771</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; ApiResponse &gt; properties &gt; type</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>773</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>773</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; schemas &gt; ApiResponse &gt; properties &gt; message</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>791</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>791</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; components &gt; requestBodies &gt; UserArray &gt; content &gt; application/json &gt; schema</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-12---media-type-object-example-is-missing-43">
+      <span class="heading-severity heading-info">Info</span> Issue No. 12 - Media type object example is missing. (43)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>mediaType-example-or-examples-exist</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Media Types</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-11">Description</h4>
+    <p>Media Type Object must specify a non-null, non-empty example value using either the `example` or `examples` property.</p>
+    <h4 id="tips-11">Tips</h4>
+    <ul>
+      <li>
+Ensure that either `example` or `examples` property is present in the Media Type Object.</li>
+      <li>
+`example` and `examples` are mutually exclusive properties.</li>
+      <li>
+When using the `examples` list, make sure that the list is not empty.</li>
+      <li>
+Ensure that the media type example value is not empty or null.</li>
+      <li>
+The example value specified must be valid in accordance with the media type schema definition.</li>
+    </ul>
+    <h4 id="for-more-information-11">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#media-type-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#media-type-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-43">Affected Components (43)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>52</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>52</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; put &gt; requestBody &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>55</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>55</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; put &gt; requestBody &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>58</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>58</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; put &gt; requestBody &gt; content &gt; application/x-www-form-urlencoded</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>66</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>66</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; put &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>69</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>69</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; put &gt; responses &gt; 200 &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>91</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>91</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; post &gt; requestBody &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>94</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>94</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; post &gt; requestBody &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>97</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>97</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; post &gt; requestBody &gt; content &gt; application/x-www-form-urlencoded</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>105</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>105</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; post &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>108</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>108</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; post &gt; responses &gt; 200 &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>143</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>143</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>148</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>148</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>180</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>180</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>185</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>185</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>215</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>215</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>218</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>218</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>311</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>311</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId}/uploadImage &gt; post &gt; requestBody &gt; content &gt; application/octet-stream</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>319</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>319</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId}/uploadImage &gt; post &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>337</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>337</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/inventory &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>354</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>354</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order &gt; post &gt; requestBody &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>357</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>357</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order &gt; post &gt; requestBody &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>360</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>360</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order &gt; post &gt; requestBody &gt; content &gt; application/x-www-form-urlencoded</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>367</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>367</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order &gt; post &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>393</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>393</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>396</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>396</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>432</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>432</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user &gt; post &gt; requestBody &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>435</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>435</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user &gt; post &gt; requestBody &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>438</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>438</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user &gt; post &gt; requestBody &gt; content &gt; application/x-www-form-urlencoded</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>445</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>445</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user &gt; post &gt; responses &gt; default &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>448</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>448</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user &gt; post &gt; responses &gt; default &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>460</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>460</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/createWithList &gt; post &gt; requestBody &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>469</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>469</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/createWithList &gt; post &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>472</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>472</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/createWithList &gt; post &gt; responses &gt; 200 &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>512</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>512</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>515</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>515</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>549</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>549</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; get &gt; responses &gt; 200 &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>552</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>552</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; get &gt; responses &gt; 200 &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>575</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>575</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; put &gt; requestBody &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>578</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>578</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; put &gt; requestBody &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>581</code></i>, <b>Line Pos: </b><i><code>13</code></i> - <b>Line No: </b><i><code>581</code></i>, <b>Line Pos: </b><i><code>14</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; put &gt; requestBody &gt; content &gt; application/x-www-form-urlencoded</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>781</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>781</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; requestBodies &gt; Pet &gt; content &gt; application/json</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>784</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>784</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; requestBodies &gt; Pet &gt; content &gt; application/xml</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>790</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>790</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; components &gt; requestBodies &gt; UserArray &gt; content &gt; application/json</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-13---response-content-is-missing-25">
+      <span class="heading-severity heading-info">Info</span> Issue No. 13 - Response content is missing. (25)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>no-response-content-implies-reponse-with-no-body</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-apimatic-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Responses</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>API Transformer</code>
+          </i>, <i><code>Code Generation</code></i>, <i><code>Developer Experience Portal</code></i></td>
+      </tr>
+    </table>
+    <h4 id="description-12">Description</h4>
+    <p>If a response does not contain a content object, it implies that there is no response body expected.</p>
+    <h4 id="tips-12">Tips</h4>
+    <ul>
+      <li>
+Define missing content object in case it has been missed.</li>
+    </ul>
+    <h4 id="for-more-information-12">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#fixed-fields-15">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#fixed-fields-15</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-25">Affected Components (25)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>72</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>72</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; put &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>74</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>74</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; put &gt; responses &gt; 404</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>76</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>76</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; put &gt; responses &gt; 422</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>111</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>111</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; post &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>113</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>113</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet &gt; post &gt; responses &gt; 422</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>153</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>153</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>190</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>190</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>221</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>221</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; get &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>223</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>223</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; get &gt; responses &gt; 404</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>255</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>255</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; post &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>282</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>282</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; delete &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>370</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>370</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order &gt; post &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>372</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>372</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order &gt; post &gt; responses &gt; 422</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>399</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>399</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; get &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>401</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>401</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; get &gt; responses &gt; 404</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>418</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>418</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; delete &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>420</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>420</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; delete &gt; responses &gt; 404</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>475</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>475</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/createWithList &gt; post &gt; responses &gt; default</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>518</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>518</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>529</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>529</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/logout &gt; get &gt; responses &gt; default</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>555</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>555</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; get &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>557</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>557</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; get &gt; responses &gt; 404</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>585</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>585</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; put &gt; responses &gt; default</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>601</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>601</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; delete &gt; responses &gt; 400</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>603</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>603</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; delete &gt; responses &gt; 404</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-14---parameter-object-example-is-missing-17">
+      <span class="heading-severity heading-info">Info</span> Issue No. 14 - Parameter object example is missing. (17)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>parameter-example-or-examples-exist</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Parameters</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-13">Description</h4>
+    <p>Parameter Object must specify a non-null, non-empty example value using either the `example` or `examples` property.</p>
+    <h4 id="tips-13">Tips</h4>
+    <ul>
+      <li>
+Ensure that either `example` or `examples` property is present in the Parameter Object.</li>
+      <li>
+`example` and `examples` are mutually exclusive properties.</li>
+      <li>
+When using the `examples` list, make sure that the list is not empty.</li>
+      <li>
+Ensure that the parameter example value is not empty or null.</li>
+      <li>
+The example value specified must be valid in accordance with the parameter schema definition.</li>
+    </ul>
+    <h4 id="for-more-information-13">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameterObject">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameterObject</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-17">Affected Components (17)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>126</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>126</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>status</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>166</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>166</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByTags &gt; get &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>tags</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>203</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>203</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; get &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>petId</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>236</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>236</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; post &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>petId</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>243</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>243</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; post &gt; parameters &gt; 1</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>name</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>248</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>248</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; post &gt; parameters &gt; 2</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>status</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>267</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>267</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; delete &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>api_key</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>273</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>273</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; delete &gt; parameters &gt; 1</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>petId</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>295</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>295</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId}/uploadImage &gt; post &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>petId</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>302</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>302</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId}/uploadImage &gt; post &gt; parameters &gt; 1</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>additionalMetadata</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>381</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>381</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; get &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>orderId</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>409</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>409</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order/{orderId} &gt; delete &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>orderId</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>484</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>484</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>username</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>490</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>490</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; parameters &gt; 1</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>password</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>538</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>538</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; get &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>username</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>565</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>565</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; put &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>username</li>
+          </ul>
+        </div>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>593</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>593</code></i>, <b>Line Pos: </b><i><code>12</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/{username} &gt; delete &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>username</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-15---property-explode-will-have-no-effect-on-parameter-of-this-type-1">
+      <span class="heading-severity heading-info">Info</span> Issue No. 15 - Property `explode` will have no effect on parameter of this type. (1)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>parameter-explode-only-for-array-or-object-types</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-standards-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>Parameters</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>API Transformer</code>
+          </i>, <i><code>Code Generation</code></i>, <i><code>Developer Experience Portal</code></i></td>
+      </tr>
+    </table>
+    <h4 id="description-14">Description</h4>
+    <p>When parameter explode is true, parameter values of type array or object generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters this property has no effect.</p>
+    <h4 id="tips-14">Tips</h4>
+    <ul>
+      <li>
+Remove property `explode` from the current Parameter Object.</li>
+      <li>
+Change the parameter type to `array` or `object` if you still intend to use the `explode` option.</li>
+    </ul>
+    <h4 id="for-more-information-14">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameter-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameter-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameter-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameter-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-1-4">Affected Components (1)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>130</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>130</code></i>, <b>Line Pos: </b><i><code>18</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/findByStatus &gt; get &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Current Parameter Type: </b>string</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-16---parameter-object-description-is-missing-1">
+      <span class="heading-severity heading-info">Info</span> Issue No. 16 - Parameter object description is missing. (1)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>parameter-description-exists</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Parameters</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-15">Description</h4>
+    <p>The Parameter Object must specify details about the parameter using the `description` property. The value of the description must be non-null and non-empty.</p>
+    <h4 id="tips-15">Tips</h4>
+    <ul>
+      <li>
+Ensure that the Parameter Object contains the `description` property.</li>
+      <li>
+Ensure that Parameter Object description value is not null or empty.</li>
+    </ul>
+    <h4 id="for-more-information-15">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameterObject">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#parameterObject</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-1-5">Affected Components (1)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>269</code></i>, <b>Line Pos: </b><i><code>11</code></i> - <b>Line No: </b><i><code>269</code></i>, <b>Line Pos: </b><i><code>22</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId} &gt; delete &gt; parameters &gt; 0</code></i></span>
+        <div class="smaller-font">
+          <ul>
+            <li>
+              <b>Parameter Name: </b>api_key</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-17---requestbody-object-description-is-missing-3">
+      <span class="heading-severity heading-info">Info</span> Issue No. 17 - RequestBody object description is missing. (3)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>request-body-description-exists</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Request Body</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-16">Description</h4>
+    <p>In an OpenAPI specification, the requestBody object defines the body of an HTTP request that an API client sends to the server. This rule ensures that the requestBody object must contain a description property that provides a clear and concise description of the request body.</p>
+    <h4 id="tips-16">Tips</h4>
+    <ul>
+      <li>
+Ensure that the RequestBody Object contains the `description` property.</li>
+      <li>
+Ensure that the RequestBody Object description value is not null or empty.</li>
+    </ul>
+    <h4 id="for-more-information-16">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#request-body-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#request-body-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-3-2">Affected Components (3)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>309</code></i>, <b>Line Pos: </b><i><code>9</code></i> - <b>Line No: </b><i><code>309</code></i>, <b>Line Pos: </b><i><code>10</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /pet/{petId}/uploadImage &gt; post &gt; requestBody</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>352</code></i>, <b>Line Pos: </b><i><code>9</code></i> - <b>Line No: </b><i><code>352</code></i>, <b>Line Pos: </b><i><code>10</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /store/order &gt; post &gt; requestBody</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>458</code></i>, <b>Line Pos: </b><i><code>9</code></i> - <b>Line No: </b><i><code>458</code></i>, <b>Line Pos: </b><i><code>10</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/createWithList &gt; post &gt; requestBody</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-18---examples-are-missing-from-header-object-2">
+      <span class="heading-severity heading-info">Info</span> Issue No. 18 - Examples are missing from header object. (2)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>header-example-or-examples-exist</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Headers</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-17">Description</h4>
+    <p>The examples or example property must be present in a header object to provide sample values for the header. It can be used to provide one or more examples, depending on the type of the header. The absence of examples or example property in a header object can make it difficult for API consumers to understand the intended use of the header.</p>
+    <h4 id="tips-17">Tips</h4>
+    <ul>
+      <li>
+Add the examples or example property to the header object and provide the appropriate value(s).</li>
+      <li>
+If using examples property, provide a unique name for each example value to differentiate between them.</li>
+      <li>
+Make sure that the example value(s) provided are valid values for the header type and do not contain any sensitive or confidential information.</li>
+    </ul>
+    <h4 id="for-more-information-17">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#header-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#header-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-2-1">Affected Components (2)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>501</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>501</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; responses &gt; 200 &gt; headers &gt; X-Rate-Limit</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>506</code></i>, <b>Line Pos: </b><i><code>15</code></i> - <b>Line No: </b><i><code>506</code></i>, <b>Line Pos: </b><i><code>16</code></i>, <b>Path: </b><i><code># &gt; paths &gt; /user/login &gt; get &gt; responses &gt; 200 &gt; headers &gt; X-Expires-After</code></i></span>
+      </li>
+    </ol>
+    <div class="page-break-before"></div>
+    <h3 id="span-classheading-severity-heading-infoinfospan-issue-no-19---description-is-missing-from-security-scheme-object-2">
+      <span class="heading-severity heading-info">Info</span> Issue No. 19 - Description is missing from security scheme object. (2)</h3>
+    <table>
+      <tr>
+        <td>Rule Id</td>
+        <td>
+          <i>
+            <code>security-scheme-description-exists</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Ruleset Id</td>
+        <td>
+          <i>
+            <code>openapi-v3-docsgen-linting</code>
+          </i>
+        </td>
+      </tr>
+      <tr>
+        <td>Type of Issue</td>
+        <td>Semantic</td>
+      </tr>
+      <tr>
+        <td>Broad Category of Issue</td>
+        <td>OpenAPI Security Schemes</td>
+      </tr>
+      <tr>
+        <td>Possible Impact On Output Of</td>
+        <td>
+          <i>
+            <code>Developer Experience Portal</code>
+          </i>
+        </td>
+      </tr>
+    </table>
+    <h4 id="description-18">Description</h4>
+    <p>Security Scheme Object should have a non-null and non-empty description.</p>
+    <h4 id="tips-18">Tips</h4>
+    <ul>
+      <li>
+Add a user-friendly description for the security scheme object.</li>
+    </ul>
+    <h4 id="for-more-information-18">For More Information</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#security-scheme-object">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#security-scheme-object</a>
+      </li>
+      <li>
+        <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md">https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md</a>
+      </li>
+    </ul>
+    <h4 id="affected-components-2-2">Affected Components (2)</h4>
+    <ol>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>796</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>796</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; securitySchemes &gt; petstore_auth</code></i></span>
+      </li>
+      <li class="source-info">
+        <span>
+          <b>File: </b>
+          <i>
+            <code>openapi.yaml</code>
+          </i>, <b>Line No: </b><i><code>804</code></i>, <b>Line Pos: </b><i><code>7</code></i> - <b>Line No: </b><i><code>804</code></i>, <b>Line Pos: </b><i><code>8</code></i>, <b>Path: </b><i><code># &gt; components &gt; securitySchemes &gt; api_key</code></i></span>
+      </li>
+    </ol>
+  </body>
+</html>
